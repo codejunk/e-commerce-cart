@@ -92,4 +92,31 @@ class CartTest extends \Codeception\Test\Unit
         $this->assertEquals($cart->getTotal(), 0);
     }
 
+
+    public function testComponents()
+    {
+        $cart = $this->getCart();
+
+        // Test shipping
+        $shippingOrig = new \Cart\Shipping(['id' => 'shipping', 'optionId' => 'usps-ground', 'title' => 'USPS Ground Service', 'value' => 7.99]);
+        $cart->getComponents()->add($shippingOrig);
+
+        $shipping = $cart->getComponents()->get('shipping');
+        $this->assertEquals($shipping->getOption('optionId'), 'usps-ground');
+        $this->assertEquals($shipping->getValue(), 7.99);
+        $this->assertEquals($cart->getTotal(), 409.29 + 7.99);
+
+        // Test tax
+        $taxOrig = new \Cart\Tax(['id' => 'tax', 'title' => 'CA Tax', 'rate' => 9.25, 'cart' => $cart]);
+        $cart->getComponents()->add($taxOrig);
+
+        $tax = $cart->getComponents()->get('tax');
+        $this->assertEquals($tax->getValue(), 37.86);
+        $this->assertEquals($cart->getTotal(), 409.29 + 7.99 + 37.86);
+
+        // Test tax after item quantity change
+        $cart->getItem('1')->setQuantity(2);
+        $this->assertEquals($tax->getValue(), 47.11);
+        $this->assertEquals($cart->getTotal(), (409.29 + 99.99) + 7.99 + 47.11);
+    }
 }

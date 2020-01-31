@@ -15,12 +15,19 @@ class Cart implements CartInterface
      */
     protected $observer;
 
+
+    /**
+     * @var ComponentCollection
+     */
+    protected $components;
+
     /**
      * Cart constructor.
      */
     public function __construct()
     {
         $this->observer = new CartObserver($this);
+        $this->components = new ComponentCollection();
     }
 
 
@@ -87,7 +94,14 @@ class Cart implements CartInterface
     public function getTotal(): float
     {
         $total = $this->getItemsTotal();
+        foreach ($this->components->getList() as $component) {
+            $total += $component->getValue();
+        }
         return $total;
     }
 
+    public function getComponents(): ComponentCollectionInterface
+    {
+        return $this->components;
+    }
 }

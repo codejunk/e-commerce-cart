@@ -49,4 +49,9 @@ interface CartInterface
      * @return float
      */
     public function getTotal(): float;
+
+
+
+    public function getComponents(): ComponentCollectionInterface;
+
 }

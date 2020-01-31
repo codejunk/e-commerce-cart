@@ -27,6 +27,18 @@ class ItemDecorator implements ItemInterface
         $this->subject->attach($observer);
     }
 
+    /**
+     * Redirects calls to decorated object
+     *
+     * @param $name
+     * @param $arguments
+     * @return mixed
+     */
+    public function __call($name, $arguments)
+    {
+        return call_user_func_array([$this->item, $name], $arguments);
+    }
+
 
     public function getId(): string
     {
