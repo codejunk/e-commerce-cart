@@ -99,18 +99,18 @@ class CartTest extends \Codeception\Test\Unit
 
         // Test shipping
         $shippingOrig = new \Cart\Shipping(['id' => 'shipping', 'optionId' => 'usps-ground', 'title' => 'USPS Ground Service', 'value' => 7.99]);
-        $cart->getComponents()->add($shippingOrig);
+        $cart->components()->add($shippingOrig);
 
-        $shipping = $cart->getComponents()->get('shipping');
+        $shipping = $cart->components()->get('shipping');
         $this->assertEquals($shipping->getOption('optionId'), 'usps-ground');
         $this->assertEquals($shipping->getValue(), 7.99);
         $this->assertEquals($cart->getTotal(), 409.29 + 7.99);
 
         // Test tax
         $taxOrig = new \Cart\Tax(['id' => 'tax', 'title' => 'CA Tax', 'rate' => 9.25, 'cart' => $cart]);
-        $cart->getComponents()->add($taxOrig);
+        $cart->components()->add($taxOrig);
 
-        $tax = $cart->getComponents()->get('tax');
+        $tax = $cart->components()->get('tax');
         $this->assertEquals($tax->getValue(), 37.86);
         $this->assertEquals($cart->getTotal(), 409.29 + 7.99 + 37.86);
 
@@ -118,5 +118,40 @@ class CartTest extends \Codeception\Test\Unit
         $cart->getItem('1')->setQuantity(2);
         $this->assertEquals($tax->getValue(), 47.11);
         $this->assertEquals($cart->getTotal(), (409.29 + 99.99) + 7.99 + 47.11);
+    }
+
+    public function testDiscount()
+    {
+        $cart = $this->getCart();
+
+        $shippingOrig = new \Cart\Shipping([
+            'id' => 'shipping',
+            'optionId' => 'usps-ground',
+            'title' => 'USPS Ground Service',
+            'value' => 7.99
+        ]);
+        $cart->components()->add($shippingOrig);
+
+        $taxOrig = new \Cart\Tax(['id' => 'tax', 'title' => 'CA Tax', 'rate' => 9.25, 'cart' => $cart]);
+        $cart->components()->add($taxOrig);
+        $this->assertEquals($cart->getTotal(), 409.29 + 7.99 + 37.86);
+
+
+        $cart->discount()->setCode('SOME-CODE');
+
+        $cart->discount()->add(new \Cart\DiscountItem(['rate' => 10, 'id' => '10-discount', 'title' => '10% off all products']));
+        $cart->discount()->add(new \Cart\DiscountShipping(['id' => 'free-shipping']));
+        $cart->discount()->add(new \Cart\DiscountTax(['id' => 'tax-free']));
+
+        $this->assertEquals($cart->discount()->get('free-shipping')->getId(), 'free-shipping');
+        $this->assertEquals($cart->discount()->get('tax-free')->getId(), 'tax-free');
+        $this->assertEquals($cart->discount()->getCode(), 'SOME-CODE');
+        $this->assertEquals($cart->getTotal(), 368.36);
+
+        $cart->discount()->clear();
+        $this->assertEquals($cart->discount()->getCode(), null);
+        $this->assertEquals($cart->getTotal(), 409.29 + 7.99 + 37.86);
+
+        //$this->assertEquals($cart->getDiscount()->getTitle(), '10% off all products');
     }
 }

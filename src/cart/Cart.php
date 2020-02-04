@@ -21,6 +21,13 @@ class Cart implements CartInterface
      */
     protected $components;
 
+
+    /**
+     * @var DiscountCollectionInterface
+     */
+    protected $discounts;
+
+
     /**
      * Cart constructor.
      */
@@ -28,6 +35,7 @@ class Cart implements CartInterface
     {
         $this->observer = new CartObserver($this);
         $this->components = new ComponentCollection();
+        $this->discounts = new DiscountCollection();
     }
 
 
@@ -80,13 +88,21 @@ class Cart implements CartInterface
     public function clear(): void
     {
         $this->items = [];
+        $this->components->clear();
+        $this->discounts->clear();
     }
 
     public function getItemsTotal(): float
     {
         $total = 0;
         foreach ($this->items as $item) {
+            $discount = 0;
+            // Apply matching discount if any
+            foreach ($this->discounts->getList($item) as $discountOption) {
+                $discount += $discountOption->getValue($item);
+            }
             $total += $item->getPrice() * $item->getQuantity();
+            $total -= $discount;
         }
         return round($total, 2);
     }
@@ -95,13 +111,29 @@ class Cart implements CartInterface
     {
         $total = $this->getItemsTotal();
         foreach ($this->components->getList() as $component) {
-            $total += $component->getValue();
+            $discount = 0;
+            // Apply matching discount if any
+            foreach ($this->discounts->getList($component) as $discountOption) {
+                $discount += $discountOption->getValue($component);
+            }
+            $total += $component->getValue() - $discount;
         }
         return $total;
     }
 
-    public function getComponents(): ComponentCollectionInterface
+    public function components(ComponentCollectionInterface $components = null): ComponentCollectionInterface
     {
+        if ($components !== null) {
+            $this->components = $components;
+        }
         return $this->components;
+    }
+
+    public function discount(DiscountCollectionInterface $discount = null): DiscountCollectionInterface
+    {
+        if ($discount !== null) {
+            $this->discounts = $discount;
+        }
+        return $this->discounts;
     }
 }

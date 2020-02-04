@@ -9,4 +9,6 @@ interface ComponentCollectionInterface
     public function add(ComponentInterface $component);
 
     public function getList(): array;
+
+    public function clear(): void;
 }

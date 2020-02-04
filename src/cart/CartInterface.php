@@ -50,8 +50,15 @@ interface CartInterface
      */
     public function getTotal(): float;
 
+    /**
+     * @param ComponentCollectionInterface|null $components
+     * @return ComponentCollectionInterface
+     */
+    public function components(ComponentCollectionInterface $components = null): ComponentCollectionInterface;
 
-
-    public function getComponents(): ComponentCollectionInterface;
-
+    /**
+     * @param DiscountCollectionInterface|null $discount
+     * @return DiscountCollectionInterface
+     */
+    public function discount(DiscountCollectionInterface $discount = null): DiscountCollectionInterface;
 }

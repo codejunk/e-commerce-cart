@@ -32,4 +32,12 @@ class ComponentCollection implements ComponentCollectionInterface
     {
         return $this->items;
     }
+
+    /**
+     * Clears components collection
+     */
+    public function clear(): void
+    {
+        $this->items = [];
+    }
 }
