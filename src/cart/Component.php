@@ -1,29 +1,31 @@
 <?php
 namespace Cart;
 
-abstract class Component implements ComponentInterface
+abstract class Component implements ComponentInterface, OptionInterface
 {
+    use OptionTrait;
+
     protected $id;
 
     protected $title;
 
     protected $value = 0;
 
-
     /**
      * Component constructor.
-     * @param array $config
+     * @param string $id
+     * @param string $title
+     * @param float $value
+     * @param array $options
      */
-    public function __construct(array $config = [])
+    public function __construct(string $id, string $title, float $value = 0, array $options = [])
     {
-        foreach ($config as $key => $value) {
-            if (property_exists($this, $key)) {
-                $this->$key = $value;
-            }
-        }
+
+        $this->id = $id;
+        $this->title = $title;
+        $this->value = $value;
+        $this->options = $options;
     }
-
-
 
     /**
      * @return string
@@ -45,12 +47,5 @@ abstract class Component implements ComponentInterface
     public function getValue(): float
     {
         return $this->value;
-    }
-
-    public function getOption(string $option)
-    {
-        if (property_exists($this, $option)) {
-            return $this->$option;
-        }
     }
 }

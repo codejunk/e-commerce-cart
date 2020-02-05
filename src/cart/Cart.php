@@ -1,17 +1,17 @@
 <?php
 namespace Cart;
 
-
-
 class Cart implements CartInterface
 {
+    use OptionTrait;
+
     /**
      * @var ItemInterface[]
      */
     protected $items = [];
 
     /**
-     * @var CartObserver
+     * @var CartEventObserver
      */
     protected $observer;
 
@@ -33,7 +33,7 @@ class Cart implements CartInterface
      */
     public function __construct()
     {
-        $this->observer = new CartObserver($this);
+        $this->observer = new CartEventObserver($this);
         $this->components = new ComponentCollection();
         $this->discounts = new DiscountCollection();
     }
@@ -46,7 +46,7 @@ class Cart implements CartInterface
                 $this->items[$item->getId()]->getQuantity() + 1
             );
         } else {
-            $itemDecorator = new ItemDecorator($item, $this->observer);
+            $itemDecorator = new ItemDecorator($item, $this->discounts, $this->observer);
             $this->items[$item->getId()] = $itemDecorator;
         }
 
@@ -96,12 +96,12 @@ class Cart implements CartInterface
     {
         $total = 0;
         foreach ($this->items as $item) {
+            $total += $item->getOriginalPrice() * $item->getQuantity();
             $discount = 0;
             // Apply matching discount if any
             foreach ($this->discounts->getList($item) as $discountOption) {
                 $discount += $discountOption->getValue($item);
             }
-            $total += $item->getPrice() * $item->getQuantity();
             $total -= $discount;
         }
         return round($total, 2);

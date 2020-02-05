@@ -1,8 +1,10 @@
 <?php
 namespace Cart;
 
-class Item implements ItemInterface
+class Item implements ItemInterface, OptionInterface
 {
+    use OptionTrait;
+
     /**
      * @var string
      */
@@ -16,13 +18,10 @@ class Item implements ItemInterface
      */
     protected $price = 0.00;
     /**
-     * @var float
-     */
-    protected $weight = 0.00;
-    /**
      * @var int
      */
     protected $quantity = 0;
+
 
     /**
      * Item constructor.
@@ -30,16 +29,32 @@ class Item implements ItemInterface
      * @param string $id
      * @param string $title
      * @param float $price
-     * @param float $weight
      * @param int $quantity
+     * @param array $options
      */
-    public function __construct(string $id, string $title, float $price, float $weight, int $quantity = 1)
+    public function __construct(string $id, string $title, float $price, int $quantity = 1, array $options = [])
     {
         $this->id = $id;
         $this->title = $title;
         $this->price = $price;
-        $this->weight = $weight;
         $this->quantity = $quantity;
+        $this->options = $options;
+    }
+
+
+    /**
+     * Magic method to access item options
+     *
+     * @param $name
+     * @param $arguments
+     * @return mixed|null
+     */
+    public function __call($name, $arguments)
+    {
+        if (substr($name, 0, 3) === 'get') {
+            $optionName = lcfirst(substr($name, 3));
+            return $this->options[$optionName] ?? null;
+        }
     }
 
     /**
@@ -75,15 +90,6 @@ class Item implements ItemInterface
         return $this->price;
     }
 
-
-    /**
-     * @return float
-     */
-    public function getWeight(): float
-    {
-        return $this->weight;
-    }
-
     /**
      * @return int
      */
@@ -101,4 +107,5 @@ class Item implements ItemInterface
             throw new \InvalidArgumentException('Unable to set quantity ' . $quantity);
         $this->quantity = $quantity;
     }
+
 }

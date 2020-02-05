@@ -5,7 +5,7 @@ namespace Cart;
  * Interface CartInterface
  * @package Cart
  */
-interface CartInterface
+interface CartInterface extends OptionInterface
 {
     /**
      * @param ItemInterface $item

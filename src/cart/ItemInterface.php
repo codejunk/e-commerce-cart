@@ -29,11 +29,6 @@ interface ItemInterface
     public function getOriginalPrice(): float;
 
     /**
-     * @return float
-     */
-    public function getWeight(): float;
-
-    /**
      * @param int $quantity
      */
     public function setQuantity(int $quantity): void;

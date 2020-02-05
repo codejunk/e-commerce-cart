@@ -9,6 +9,4 @@ interface ComponentInterface
     public function getTitle(): string;
 
     public function getValue(): float;
-
-    public function getOption(string $option);
 }

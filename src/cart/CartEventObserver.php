@@ -4,7 +4,7 @@ namespace Cart;
 
 use SplSubject;
 
-class CartObserver implements \SplObserver
+class CartEventObserver implements \SplObserver
 {
     /**
      * @var Cart
@@ -12,7 +12,7 @@ class CartObserver implements \SplObserver
     protected $cart;
 
     /**
-     * CartObserver constructor.
+     * CartEventObserver constructor.
      * @param Cart $cart
      */
     public function __construct(Cart $cart)

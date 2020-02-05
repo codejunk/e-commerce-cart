@@ -2,7 +2,7 @@
 namespace Cart;
 
 
-class Subject implements \SplSubject
+class EventSubject implements \SplSubject
 {
     /**
      * @var \SplObjectStorage

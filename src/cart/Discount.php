@@ -2,23 +2,29 @@
 namespace Cart;
 
 
-abstract class Discount implements DiscountInterface
+abstract class Discount implements DiscountInterface, OptionInterface
 {
+    use OptionTrait;
+
     protected $id;
 
     protected $title;
 
+    protected $rate;
+
     /**
      * Discount constructor.
-     * @param array $config
+     * @param string $id
+     * @param string $title
+     * @param float $rate
+     * @param array $options
      */
-    public function __construct(array $config = [])
+    public function __construct(string $id, string $title, float $rate = 0, array $options = [])
     {
-        foreach ($config as $key => $value) {
-            if (property_exists($this, $key)) {
-                $this->$key = $value;
-            }
-        }
+        $this->id = $id;
+        $this->title = $title;
+        $this->rate = $rate;
+        $this->options = $options;
     }
 
     public function getId(): string

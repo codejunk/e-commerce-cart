@@ -16,15 +16,28 @@ class ItemDecorator implements ItemInterface
     protected $subject;
 
     /**
+     * @var DiscountCollectionInterface
+     */
+    protected $discounts;
+
+
+
+    /**
      * ItemDecorator constructor.
      * @param ItemInterface $item
+     * @param DiscountCollectionInterface $discounts
      * @param \SplObserver $observer
      */
-    public function __construct(ItemInterface $item, \SplObserver $observer)
+    public function __construct(
+        ItemInterface $item,
+        DiscountCollectionInterface $discounts,
+        \SplObserver $observer
+    )
     {
         $this->item = $item;
-        $this->subject = new Subject();
+        $this->subject = new EventSubject();
         $this->subject->attach($observer);
+        $this->discounts = $discounts;
     }
 
     /**
@@ -52,17 +65,18 @@ class ItemDecorator implements ItemInterface
 
     public function getPrice(): float
     {
-        return $this->item->getPrice();
+        $price = $this->item->getPrice();
+        $discount = 0;
+        // Apply matching discount if any
+        foreach ($this->discounts->getList($this->item) as $discountOption) {
+            $discount += ($discountOption->getValue($this->item) / $this->item->getQuantity());
+        }
+        return round($price - $discount, 2);
     }
 
     public function getOriginalPrice(): float
     {
         return $this->item->getOriginalPrice();
-    }
-
-    public function getWeight(): float
-    {
-        return $this->item->getWeight();
     }
 
     public function setQuantity(int $quantity): void

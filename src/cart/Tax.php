@@ -4,17 +4,19 @@ namespace Cart;
 
 class Tax extends Component
 {
-    protected $rate = 0;
-
-    /**
-     * @var CartInterface
-     */
-    protected $cart;
-
     public function getValue(): float
     {
-        $tax = $this->cart->getItemsTotal() * $this->rate / 100;
-        $tax = round($tax, 2);
+        /**
+         * @var CartInterface $cart
+         * @var float $rate
+         */
+        $tax = 0;
+        $cart = $this->getOption('cart');
+        $rate = $this->value;
+        if ($cart && $rate !== null) {
+            $tax = $cart->getItemsTotal() * $rate / 100;
+            $tax = round($tax, 2);
+        }
 
         return $tax;
     }
