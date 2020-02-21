@@ -30,12 +30,27 @@ class Cart implements CartInterface
 
     /**
      * Cart constructor.
+     * @param ComponentCollectionInterface|null $components
+     * @param DiscountCollectionInterface|null $discounts
+     * @param string|null $eventObserverClass
      */
-    public function __construct()
+    public function __construct(
+        ComponentCollectionInterface $components = null,
+        DiscountCollectionInterface $discounts = null,
+        string $eventObserverClass = null
+    )
     {
-        $this->observer = new CartEventObserver($this);
-        $this->components = new ComponentCollection();
-        $this->discounts = new DiscountCollection();
+        if ($components === null)
+            $this->components = new ComponentCollection();
+
+        if ($discounts === null)
+            $this->discounts = new DiscountCollection();
+
+        if ($eventObserverClass !== null && class_exists($eventObserverClass)) {
+            $this->observer = new $eventObserverClass($this);
+        } else {
+            $this->observer = new CartEventObserver($this);
+        }
     }
 
 

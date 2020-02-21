@@ -7,15 +7,15 @@ use SplSubject;
 class CartEventObserver implements \SplObserver
 {
     /**
-     * @var Cart
+     * @var CartInterface
      */
     protected $cart;
 
     /**
      * CartEventObserver constructor.
-     * @param Cart $cart
+     * @param CartInterface $cart
      */
-    public function __construct(Cart $cart)
+    public function __construct(CartInterface $cart)
     {
         $this->cart = $cart;
     }
