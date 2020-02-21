@@ -6,7 +6,7 @@
  * Time: 6:27 PM
  */
 
-namespace Cart;
+namespace codejunk\ecommerce\cart;
 
 
 class EventItemQuantityChange implements EventInterface

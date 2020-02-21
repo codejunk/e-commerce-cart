@@ -6,7 +6,7 @@
  * Time: 6:30 PM
  */
 
-namespace Cart;
+namespace codejunk\ecommerce\cart;
 
 
 interface DiscountInterface

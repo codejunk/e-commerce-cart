@@ -1,6 +1,6 @@
 <?php
 
-namespace Cart;
+namespace codejunk\ecommerce\cart;
 
 
 class ItemDecorator implements ItemInterface

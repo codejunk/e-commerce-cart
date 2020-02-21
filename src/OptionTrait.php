@@ -6,7 +6,7 @@
  * Time: 5:42 PM
  */
 
-namespace Cart;
+namespace codejunk\ecommerce\cart;
 
 
 trait OptionTrait

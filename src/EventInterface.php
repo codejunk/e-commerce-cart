@@ -6,7 +6,7 @@
  * Time: 6:25 PM
  */
 
-namespace Cart;
+namespace codejunk\ecommerce\cart;
 
 
 interface EventInterface

@@ -1,5 +1,5 @@
 <?php
-namespace Cart;
+namespace codejunk\ecommerce\cart;
 
 
 interface OptionInterface
