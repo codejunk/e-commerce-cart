@@ -1,6 +1,6 @@
 {
-    "name": "ECommerce/Cart",
-    "description": "Shipping cart extension",
+    "name": "e-commerce-cart",
+    "description": "Shopping cart extension",
     "autoload": {
         "psr-4" : {
             "Cart\\" : "src/cart/"
