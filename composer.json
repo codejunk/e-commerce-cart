@@ -3,7 +3,7 @@
     "description": "Shopping cart extension",
     "autoload": {
         "psr-4" : {
-            "Cart\\" : "src/cart/"
+            "codejunk\\ecommerce\\cart\\" : "src/"
         }
     },
     "require": {
