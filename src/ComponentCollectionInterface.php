@@ -1,7 +1,6 @@
 <?php
 namespace codejunk\ecommerce\cart;
 
-
 interface ComponentCollectionInterface
 {
     public function get(string $id): ?ComponentInterface;

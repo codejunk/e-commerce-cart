@@ -103,9 +103,9 @@ class Item implements ItemInterface, OptionInterface
      */
     public function setQuantity(int $quantity): void
     {
-        if ($quantity < 0)
+        if ($quantity < 0) {
             throw new \InvalidArgumentException('Unable to set quantity ' . $quantity);
+        }
         $this->quantity = $quantity;
     }
-
 }

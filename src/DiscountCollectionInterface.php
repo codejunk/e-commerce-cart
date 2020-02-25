@@ -1,7 +1,6 @@
 <?php
 namespace codejunk\ecommerce\cart;
 
-
 /**
  * Interface DiscountCollectionInterface
  * @package Cart

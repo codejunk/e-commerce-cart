@@ -8,7 +8,6 @@
 
 namespace codejunk\ecommerce\cart;
 
-
 interface DiscountInterface
 {
     public function getId(): string;

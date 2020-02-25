@@ -1,7 +1,6 @@
 <?php
 namespace codejunk\ecommerce\cart;
 
-
 use SplSubject;
 
 class CartEventObserver implements \SplObserver

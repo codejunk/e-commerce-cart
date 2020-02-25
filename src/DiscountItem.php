@@ -1,7 +1,6 @@
 <?php
 namespace codejunk\ecommerce\cart;
 
-
 class DiscountItem extends Discount
 {
     protected $validItems = [];

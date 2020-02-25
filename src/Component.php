@@ -20,7 +20,6 @@ abstract class Component implements ComponentInterface, OptionInterface
      */
     public function __construct(string $id, string $title, float $value = 0, array $options = [])
     {
-
         $this->id = $id;
         $this->title = $title;
         $this->value = $value;

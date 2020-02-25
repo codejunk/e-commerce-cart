@@ -1,7 +1,6 @@
 <?php
 namespace codejunk\ecommerce\cart;
 
-
 interface CartRepositoryInterface
 {
     public function load(): CartInterface;

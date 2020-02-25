@@ -1,7 +1,6 @@
 <?php
 namespace codejunk\ecommerce\cart;
 
-
 abstract class Discount implements DiscountInterface, OptionInterface
 {
     use OptionTrait;

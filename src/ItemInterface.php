@@ -1,7 +1,6 @@
 <?php
 namespace codejunk\ecommerce\cart;
 
-
 /**
  * Interface ItemInterface
  * @package Cart
@@ -37,5 +36,4 @@ interface ItemInterface
      * @return int
      */
     public function getQuantity(): int;
-
 }

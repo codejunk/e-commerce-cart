@@ -1,7 +1,6 @@
 <?php
 namespace codejunk\ecommerce\cart;
 
-
 class EventSubject implements \SplSubject
 {
     /**

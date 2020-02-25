@@ -1,7 +1,6 @@
 <?php
 namespace codejunk\ecommerce\cart;
 
-
 /**
  * Class DiscountCollection
  * @package Cart
@@ -65,8 +64,9 @@ class DiscountCollection implements DiscountCollectionInterface
         if ($object !== null) {
             $found = [];
             foreach ($this->items as $i) {
-                if ($i->isValidFor($object))
+                if ($i->isValidFor($object)) {
                     $found[$i->getId()] = $i;
+                }
             }
             return $found;
         }
@@ -82,5 +82,4 @@ class DiscountCollection implements DiscountCollectionInterface
         $this->code = null;
         $this->items = [];
     }
-
 }

@@ -8,20 +8,30 @@ use codejunk\ecommerce\cart\DiscountItem;
 use codejunk\ecommerce\cart\DiscountShipping;
 use codejunk\ecommerce\cart\DiscountTax;
 
-
 class CartTest extends \Codeception\Test\Unit
 {
-
     protected function getCartItems()
     {
         return [
-            new Item('1', 'Product 1 title', 99.99, 1,
+            new Item(
+                '1',
+                'Product 1 title',
+                99.99,
+                1,
                 ['weight' => 1.34, 'image' => 'product_1_image_URL']
             ),
-            new Item('2', 'Product 2 title', 69.99, 1,
+            new Item(
+                '2',
+                'Product 2 title',
+                69.99,
+                1,
                 ['weight' => 1.55, 'image' => 'product_2_image_URL']
             ),
-            new Item('3', 'Product 3 title', 79.77, 3,
+            new Item(
+                '3',
+                'Product 3 title',
+                79.77,
+                3,
                 ['weight' => 1.5, 'image' => 'product_3_image_URL']
             )
         ];
@@ -31,8 +41,9 @@ class CartTest extends \Codeception\Test\Unit
     {
         $cart = new Cart();
 
-        foreach ($this->getCartItems() as $item)
+        foreach ($this->getCartItems() as $item) {
             $cart->add($item);
+        }
 
         return $cart;
     }
@@ -147,7 +158,10 @@ class CartTest extends \Codeception\Test\Unit
         $this->assertEquals($cart->getTotal(), 409.29 + 7.99);
 
         // Test tax
-        $taxOrig = new Tax('tax', 'CA Tax', 9.25,
+        $taxOrig = new Tax(
+            'tax',
+            'CA Tax',
+            9.25,
             ['cart' => $cart]
         );
         $cart->components()->add($taxOrig);
@@ -187,7 +201,7 @@ class CartTest extends \Codeception\Test\Unit
 
 
         $cart->discount()->add(new DiscountItem('10-discount', '10% off all products', 10));
-        $cart->discount()->add(new DiscountShipping('free-shipping','Free shipping', 100));
+        $cart->discount()->add(new DiscountShipping('free-shipping', 'Free shipping', 100));
         $cart->discount()->add(new DiscountTax('tax-free', 'Tax free', 100));
 
         $this->assertEquals($cart->discount()->get('free-shipping')->getId(), 'free-shipping');
@@ -230,5 +244,4 @@ class CartTest extends \Codeception\Test\Unit
         $this->assertEquals($cart->getOption('orderId'), 123456);
         $this->assertEquals($cart->getOption('paymentMethod'), 'PayPal');
     }
-
 }

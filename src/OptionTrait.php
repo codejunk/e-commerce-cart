@@ -8,7 +8,6 @@
 
 namespace codejunk\ecommerce\cart;
 
-
 trait OptionTrait
 {
     protected $options = [];

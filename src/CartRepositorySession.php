@@ -1,7 +1,6 @@
 <?php
 namespace codejunk\ecommerce\cart;
 
-
 class CartRepositorySession implements CartRepositoryInterface
 {
     const STORAGE_DATA_KEY = 'cart_storage';
@@ -30,5 +29,4 @@ class CartRepositorySession implements CartRepositoryInterface
 
         return true;
     }
-
 }

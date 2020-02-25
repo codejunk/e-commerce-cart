@@ -1,7 +1,6 @@
 <?php
 namespace codejunk\ecommerce\cart;
 
-
 class Tax extends Component
 {
     public function getValue(): float

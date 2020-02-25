@@ -2,7 +2,6 @@
 
 namespace codejunk\ecommerce\cart;
 
-
 class ItemDecorator implements ItemInterface
 {
     /**
@@ -32,8 +31,7 @@ class ItemDecorator implements ItemInterface
         ItemInterface $item,
         DiscountCollectionInterface $discounts,
         \SplObserver $observer
-    )
-    {
+    ) {
         $this->item = $item;
         $this->subject = new EventSubject();
         $this->subject->attach($observer);

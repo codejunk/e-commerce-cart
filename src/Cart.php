@@ -38,13 +38,14 @@ class Cart implements CartInterface
         ComponentCollectionInterface $components = null,
         DiscountCollectionInterface $discounts = null,
         string $eventObserverClass = null
-    )
-    {
-        if ($components === null)
+    ) {
+        if ($components === null) {
             $this->components = new ComponentCollection();
+        }
 
-        if ($discounts === null)
+        if ($discounts === null) {
             $this->discounts = new DiscountCollection();
+        }
 
         if ($eventObserverClass !== null && class_exists($eventObserverClass)) {
             $this->observer = new $eventObserverClass($this);

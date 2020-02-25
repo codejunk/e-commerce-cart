@@ -8,7 +8,6 @@
 
 namespace codejunk\ecommerce\cart;
 
-
 class EventItemQuantityChange implements EventInterface
 {
     public function handle(CartInterface $cart = null, ItemInterface $item = null): void
