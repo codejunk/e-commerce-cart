@@ -6,6 +6,21 @@ class ComponentCollection implements ComponentCollectionInterface
     protected $items = [];
 
     /**
+     * @var \SplSubject
+     */
+    protected $subject;
+
+    /**
+     * ComponentCollection constructor.
+     * @param \SplObserver $observer
+     */
+    public function __construct(\SplObserver $observer)
+    {
+        $this->subject = new EventSubject();
+        $this->subject->attach($observer);
+    }
+
+    /**
      * @param string $id
      * @return ComponentInterface|null
      */
@@ -23,6 +38,8 @@ class ComponentCollection implements ComponentCollectionInterface
     public function add(ComponentInterface $component)
     {
         $this->items[$component->getId()] = $component;
+        // Trigger cart change event
+        $this->subject->notify(EventCartChange::class, $this);
     }
 
     /**
@@ -39,5 +56,7 @@ class ComponentCollection implements ComponentCollectionInterface
     public function clear(): void
     {
         $this->items = [];
+        // Trigger cart change event
+        $this->subject->notify(EventCartChange::class, $this);
     }
 }

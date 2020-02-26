@@ -227,11 +227,34 @@ class CartTest extends \Codeception\Test\Unit
     public function testRepository()
     {
         $cart = $this->getCart();
+        // Expect auto save
+        $cart->remove('1');
+        unset($cart);
+
         $repository = new \codejunk\ecommerce\cart\CartRepositorySession();
-        $this->assertTrue($repository->save($cart));
+        $cart = $repository->load();
+        $this->assertEquals(4, $cart->getItemsCount());
+        unset($cart);
+
+        $cart = $this->getCart();
+        // Remove cart item by setting item quantity to 0
+        $cart->getItem('1')->setQuantity(0);
+        $cart->discount()->setCode('SOME-CODE');
+        $cart->discount()->add(new DiscountItem('10-discount', '10% off all products', 10));
+        $taxOrig = new Tax(
+            'tax',
+            'CA Tax',
+            9.25,
+            ['cart' => $cart]
+        );
+        $cart->components()->add($taxOrig);
+        unset($cart);
 
         $cart = $repository->load();
-        $this->assertTrue($cart->getTotal() > 0);
+        $this->assertEquals(4, $cart->getItemsCount());
+        $this->assertEquals('10-discount', $cart->discount()->get('10-discount')->getId());
+        $this->assertEquals('SOME-CODE', $cart->discount()->getCode());
+        $this->assertEquals('CA Tax', $cart->components()->get('tax')->getTitle());
     }
 
 

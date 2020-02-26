@@ -11,10 +11,14 @@ class Cart implements CartInterface
     protected $items = [];
 
     /**
-     * @var CartEventObserver
+     * @var \SplObserver
      */
     protected $observer;
 
+    /**
+     * @var |SplSubject
+     */
+    protected $subject;
 
     /**
      * @var ComponentCollection
@@ -29,29 +33,35 @@ class Cart implements CartInterface
 
 
     /**
+     * @var CartRepositoryInterface
+     */
+    protected $repository;
+
+
+    protected function trigger(string $eventName, $eventData)
+    {
+        $this->subject = new EventSubject();
+        $this->subject->attach($this->observer);
+        $this->subject->notify($eventName, $eventData);
+    }
+
+    /**
      * Cart constructor.
      * @param ComponentCollectionInterface|null $components
      * @param DiscountCollectionInterface|null $discounts
-     * @param string|null $eventObserverClass
+     * @param CartRepositoryInterface|null $repository
+     * @param \SplObserver|null $eventObserver
      */
     public function __construct(
         ComponentCollectionInterface $components = null,
         DiscountCollectionInterface $discounts = null,
-        string $eventObserverClass = null
+        CartRepositoryInterface $repository = null,
+        \SplObserver $eventObserver = null
     ) {
-        if ($components === null) {
-            $this->components = new ComponentCollection();
-        }
-
-        if ($discounts === null) {
-            $this->discounts = new DiscountCollection();
-        }
-
-        if ($eventObserverClass !== null && class_exists($eventObserverClass)) {
-            $this->observer = new $eventObserverClass($this);
-        } else {
-            $this->observer = new CartEventObserver($this);
-        }
+        $this->repository = $repository ?? new CartRepositorySession();
+        $this->observer = $eventObserver ?? new CartEventObserver($this);
+        $this->components = $components ?? new ComponentCollection($this->observer);
+        $this->discounts = $discounts ?? new DiscountCollection($this->observer);
     }
 
 
@@ -66,6 +76,8 @@ class Cart implements CartInterface
             $this->items[$item->getId()] = $itemDecorator;
         }
 
+        $this->trigger(EventCartChange::class, $this);
+
         return $this->items[$item->getId()]->getQuantity();
     }
 
@@ -76,6 +88,8 @@ class Cart implements CartInterface
         } else {
             throw new \InvalidArgumentException('Item with id:' . $id . ' is not exists');
         }
+
+        $this->trigger(EventCartChange::class, $this);
     }
 
     public function &getItem(string $id): ItemInterface
@@ -106,6 +120,8 @@ class Cart implements CartInterface
         $this->items = [];
         $this->components->clear();
         $this->discounts->clear();
+
+        $this->trigger(EventCartChange::class, $this);
     }
 
     public function getItemsTotal(): float

@@ -2,6 +2,12 @@
 
 namespace codejunk\ecommerce\cart;
 
+/**
+ * Class ItemDecorator - a cart item wrapper
+ * notifies parent cart object about significant state changes
+ *
+ * @package codejunk\ecommerce\cart
+ */
 class ItemDecorator implements ItemInterface
 {
     /**
@@ -51,16 +57,25 @@ class ItemDecorator implements ItemInterface
     }
 
 
+    /**
+     * @return string
+     */
     public function getId(): string
     {
         return $this->item->getId();
     }
 
+    /**
+     * @return string
+     */
     public function getTitle(): string
     {
         return $this->item->getTitle();
     }
 
+    /**
+     * @return float
+     */
     public function getPrice(): float
     {
         $price = $this->item->getPrice();
@@ -72,17 +87,27 @@ class ItemDecorator implements ItemInterface
         return round($price - $discount, 2);
     }
 
+    /**
+     * @return float
+     */
     public function getOriginalPrice(): float
     {
         return $this->item->getOriginalPrice();
     }
 
+    /**
+     * @param int $quantity
+     */
     public function setQuantity(int $quantity): void
     {
         $this->item->setQuantity($quantity);
         $this->subject->notify(EventItemQuantityChange::class, $this);
+        $this->subject->notify(EventCartChange::class, $this);
     }
 
+    /**
+     * @return int
+     */
     public function getQuantity(): int
     {
         return $this->item->getQuantity();

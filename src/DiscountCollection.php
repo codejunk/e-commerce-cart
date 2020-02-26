@@ -17,6 +17,21 @@ class DiscountCollection implements DiscountCollectionInterface
      */
     protected $items = [];
 
+    /**
+     * @var \SplSubject
+     */
+    protected $subject;
+
+    /**
+     * DiscountCollection constructor.
+     * @param $observer
+     */
+    public function __construct(\SplObserver $observer)
+    {
+        $this->subject = new EventSubject();
+        $this->subject->attach($observer);
+    }
+
 
     /**
      * @return null|string
@@ -52,6 +67,8 @@ class DiscountCollection implements DiscountCollectionInterface
     public function add(DiscountInterface $discount)
     {
         $this->items[$discount->getId()] = $discount;
+        // Trigger cart change event
+        $this->subject->notify(EventCartChange::class, $this);
     }
 
     /**
@@ -81,5 +98,7 @@ class DiscountCollection implements DiscountCollectionInterface
     {
         $this->code = null;
         $this->items = [];
+        // Trigger cart change event
+        $this->subject->notify(EventCartChange::class, $this);
     }
 }
