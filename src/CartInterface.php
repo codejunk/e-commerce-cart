@@ -48,6 +48,11 @@ interface CartInterface extends OptionInterface
     /**
      * @return float
      */
+    public function getDiscountTotal(): float;
+
+    /**
+     * @return float
+     */
     public function getTotal(): float;
 
     /**

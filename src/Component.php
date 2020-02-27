@@ -1,14 +1,27 @@
 <?php
 namespace codejunk\ecommerce\cart;
 
+/**
+ * Class Component
+ * @package codejunk\ecommerce\cart
+ */
 abstract class Component implements ComponentInterface, OptionInterface
 {
     use OptionTrait;
 
+    /**
+     * @var string
+     */
     protected $id;
 
+    /**
+     * @var string
+     */
     protected $title;
 
+    /**
+     * @var float|int
+     */
     protected $value = 0;
 
     /**
@@ -43,6 +56,9 @@ abstract class Component implements ComponentInterface, OptionInterface
     }
 
 
+    /**
+     * @return float
+     */
     public function getValue(): float
     {
         return $this->value;

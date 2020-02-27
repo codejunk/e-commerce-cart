@@ -53,10 +53,10 @@ class Cart implements CartInterface
      * @param \SplObserver|null $eventObserver
      */
     public function __construct(
-        ComponentCollectionInterface $components = null,
-        DiscountCollectionInterface $discounts = null,
         CartRepositoryInterface $repository = null,
-        \SplObserver $eventObserver = null
+        \SplObserver $eventObserver = null,
+        ComponentCollectionInterface $components = null,
+        DiscountCollectionInterface $discounts = null
     ) {
         $this->repository = $repository ?? new CartRepositorySession();
         $this->observer = $eventObserver ?? new CartEventObserver($this);
@@ -129,27 +129,24 @@ class Cart implements CartInterface
         $total = 0;
         foreach ($this->items as $item) {
             $total += $item->getOriginalPrice() * $item->getQuantity();
-            $discount = 0;
-            // Apply matching discount if any
-            foreach ($this->discounts->getList($item) as $discountOption) {
-                $discount += $discountOption->getValue($item);
-            }
-            $total -= $discount;
         }
         return round($total, 2);
     }
 
+
+    public function getDiscountTotal(): float
+    {
+        return $this->getItemsDiscount() + $this->getComponentsDiscount();
+    }
+
+
     public function getTotal(): float
     {
-        $total = $this->getItemsTotal();
-        foreach ($this->components->getList() as $component) {
-            $discount = 0;
-            // Apply matching discount if any
-            foreach ($this->discounts->getList($component) as $discountOption) {
-                $discount += $discountOption->getValue($component);
-            }
-            $total += $component->getValue() - $discount;
-        }
+        // Calculate items total
+        $total = ($this->getItemsTotal() - $this->getItemsDiscount());
+        // Calculate components total
+        $total += ($this->getComponentsTotal() - $this->getComponentsDiscount());
+
         return $total;
     }
 
@@ -167,5 +164,40 @@ class Cart implements CartInterface
             $this->discounts = $discount;
         }
         return $this->discounts;
+    }
+
+
+    protected function getItemsDiscount()
+    {
+        $discount = 0;
+        foreach ($this->items as $item) {
+            // Apply matching discount if any
+            foreach ($this->discounts->getList($item) as $discountOption) {
+                $discount += $discountOption->getValue($item);
+            }
+        }
+        return round($discount, 2);
+    }
+
+    protected function getComponentsDiscount()
+    {
+        $discount = 0;
+        foreach ($this->components->getList() as $component) {
+            // Apply matching discount if any
+            foreach ($this->discounts->getList($component) as $discountOption) {
+                $discount += $discountOption->getValue($component);
+            }
+        }
+        return $discount;
+    }
+
+    protected function getComponentsTotal()
+    {
+        $total = 0;
+        foreach ($this->components->getList() as $component) {
+            $total += $component->getValue();
+        }
+
+        return $total;
     }
 }

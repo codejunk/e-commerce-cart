@@ -22,8 +22,9 @@ class DiscountItem extends Discount
 
     protected function calculateItemDiscount(ItemInterface $item): float
     {
-        $discount = $item->getOriginalPrice() * $item->getQuantity() * $this->rate / 100;
-        $discount = round($discount, 2);
+        $itemCost = round($item->getOriginalPrice() * $item->getQuantity(), 2);
+        $discount = $itemCost * $this->rate / 100;
+        //$discount = round($discount, 2);
         return $discount;
     }
 }
