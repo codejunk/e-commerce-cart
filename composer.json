@@ -1,5 +1,5 @@
 {
-    "name": "codejunk/e-commerce-cart",
+    "name": "codejunk/cart",
     "description": "Shopping cart extension",
     "autoload": {
         "psr-4" : {
