@@ -16,11 +16,12 @@ class CartRepositorySession implements CartRepositoryInterface
         }
     }
 
-    public function load(): CartInterface
+    public function load(): ?CartInterface
     {
         if (isset($_SESSION[self::STORAGE_DATA_KEY])) {
             return $_SESSION[self::STORAGE_DATA_KEY];
         }
+        return null;
     }
 
     public function save(CartInterface $cart): bool
