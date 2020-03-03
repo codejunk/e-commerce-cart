@@ -66,4 +66,11 @@ interface CartInterface extends OptionInterface
      * @return DiscountCollectionInterface
      */
     public function discount(DiscountCollectionInterface $discount = null): DiscountCollectionInterface;
+
+
+    /**
+     * Returns array representation of cart
+     * @return array
+     */
+    public function toArray(): array;
 }

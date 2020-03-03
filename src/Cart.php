@@ -1,6 +1,10 @@
 <?php
 namespace codejunk\ecommerce\cart;
 
+/**
+ * Class Cart
+ * @package codejunk\ecommerce\cart
+ */
 class Cart implements CartInterface
 {
     use OptionTrait;
@@ -38,6 +42,10 @@ class Cart implements CartInterface
     protected $repository;
 
 
+    /**
+     * @param string $eventName
+     * @param $eventData
+     */
     protected function trigger(string $eventName, $eventData)
     {
         $this->subject = new EventSubject();
@@ -65,6 +73,10 @@ class Cart implements CartInterface
     }
 
 
+    /**
+     * @param ItemInterface $item
+     * @return int
+     */
     public function add(ItemInterface $item): int
     {
         if (isset($this->items[$item->getId()])) {
@@ -81,6 +93,10 @@ class Cart implements CartInterface
         return $this->items[$item->getId()]->getQuantity();
     }
 
+    /**
+     * @param string $id
+     * @return int|void
+     */
     public function remove(string $id)
     {
         if (isset($this->items[$id])) {
@@ -92,6 +108,10 @@ class Cart implements CartInterface
         $this->trigger(EventCartChange::class, $this);
     }
 
+    /**
+     * @param string $id
+     * @return ItemInterface
+     */
     public function &getItem(string $id): ItemInterface
     {
         if (isset($this->items[$id])) {
@@ -101,11 +121,17 @@ class Cart implements CartInterface
         }
     }
 
+    /**
+     * @return array
+     */
     public function getItems(): array
     {
         return $this->items;
     }
 
+    /**
+     * @return int
+     */
     public function getItemsCount(): int
     {
         $count = 0;
@@ -115,6 +141,9 @@ class Cart implements CartInterface
         return $count;
     }
 
+    /**
+     *
+     */
     public function clear(): void
     {
         $this->items = [];
@@ -124,6 +153,9 @@ class Cart implements CartInterface
         $this->trigger(EventCartChange::class, $this);
     }
 
+    /**
+     * @return float
+     */
     public function getItemsTotal(): float
     {
         $total = 0;
@@ -134,12 +166,18 @@ class Cart implements CartInterface
     }
 
 
+    /**
+     * @return float
+     */
     public function getDiscountTotal(): float
     {
         return $this->getItemsDiscount() + $this->getComponentsDiscount();
     }
 
 
+    /**
+     * @return float
+     */
     public function getTotal(): float
     {
         // Calculate items total
@@ -150,6 +188,10 @@ class Cart implements CartInterface
         return $total;
     }
 
+    /**
+     * @param ComponentCollectionInterface|null $components
+     * @return ComponentCollectionInterface
+     */
     public function components(ComponentCollectionInterface $components = null): ComponentCollectionInterface
     {
         if ($components !== null) {
@@ -158,6 +200,10 @@ class Cart implements CartInterface
         return $this->components;
     }
 
+    /**
+     * @param DiscountCollectionInterface|null $discount
+     * @return DiscountCollectionInterface
+     */
     public function discount(DiscountCollectionInterface $discount = null): DiscountCollectionInterface
     {
         if ($discount !== null) {
@@ -166,7 +212,17 @@ class Cart implements CartInterface
         return $this->discounts;
     }
 
+    /**
+     * @return array
+     */
+    public function toArray(): array
+    {
+       return [];
+    }
 
+    /**
+     * @return float
+     */
     protected function getItemsDiscount()
     {
         $discount = 0;
@@ -179,6 +235,9 @@ class Cart implements CartInterface
         return round($discount, 2);
     }
 
+    /**
+     * @return float|int
+     */
     protected function getComponentsDiscount()
     {
         $discount = 0;
@@ -191,6 +250,9 @@ class Cart implements CartInterface
         return $discount;
     }
 
+    /**
+     * @return float|int
+     */
     protected function getComponentsTotal()
     {
         $total = 0;
