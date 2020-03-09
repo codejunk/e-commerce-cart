@@ -5,7 +5,7 @@ namespace codejunk\ecommerce\cart;
  * Class Component
  * @package codejunk\ecommerce\cart
  */
-abstract class Component implements ComponentInterface, OptionInterface
+abstract class Component implements ComponentInterface
 {
     use OptionTrait;
 
@@ -62,5 +62,13 @@ abstract class Component implements ComponentInterface, OptionInterface
     public function getValue(): float
     {
         return $this->value;
+    }
+
+    /**
+     * @return float
+     */
+    public function getDiscount(): float
+    {
+        return 0;
     }
 }

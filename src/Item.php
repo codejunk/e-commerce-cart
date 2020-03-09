@@ -1,7 +1,7 @@
 <?php
 namespace codejunk\ecommerce\cart;
 
-class Item implements ItemInterface, OptionInterface
+class Item implements ItemInterface
 {
     use OptionTrait;
 

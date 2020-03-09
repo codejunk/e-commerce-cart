@@ -112,4 +112,23 @@ class ItemDecorator implements ItemInterface
     {
         return $this->item->getQuantity();
     }
+
+    /**
+     * @param string $name
+     * @return mixed
+     */
+    public function getOption(string $name)
+    {
+        return $this->item->getOption($name);
+    }
+
+    /**
+     * @param string $name
+     * @param $value
+     */
+    public function setOption(string $name, $value): void
+    {
+        $this->item->setOption($name, $value);
+    }
+
 }

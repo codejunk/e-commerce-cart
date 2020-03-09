@@ -3,6 +3,9 @@ namespace codejunk\ecommerce\cart;
 
 class ComponentCollection implements ComponentCollectionInterface
 {
+    /**
+     * @var array
+     */
     protected $items = [];
 
     /**
@@ -10,14 +13,23 @@ class ComponentCollection implements ComponentCollectionInterface
      */
     protected $subject;
 
+
+    /**
+     * @var CartInterface
+     */
+    protected $cart;
+
     /**
      * ComponentCollection constructor.
      * @param \SplObserver $observer
+     * @param CartInterface $cart
      */
-    public function __construct(\SplObserver $observer)
+    public function __construct(\SplObserver $observer, CartInterface $cart)
     {
         $this->subject = new EventSubject();
         $this->subject->attach($observer);
+
+        $this->cart = $cart;
     }
 
     /**
@@ -37,7 +49,8 @@ class ComponentCollection implements ComponentCollectionInterface
      */
     public function add(ComponentInterface $component)
     {
-        $this->items[$component->getId()] = $component;
+        $decorator = new ComponentDecorator($component, $this->cart);
+        $this->items[$component->getId()] = $decorator;
         // Trigger cart change event
         $this->subject->notify(EventCartChange::class, $this);
     }

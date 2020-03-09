@@ -8,7 +8,7 @@
 
 namespace codejunk\ecommerce\cart;
 
-interface DiscountInterface
+interface DiscountInterface extends OptionInterface
 {
     public function getId(): string;
 

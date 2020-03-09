@@ -13,7 +13,11 @@ class Tax extends Component
         $cart = $this->getOption('cart');
         $rate = $this->value;
         if ($cart && $rate !== null) {
-            $tax = $cart->getItemsTotal() * $rate / 100;
+            $itemsTotal = 0;
+            foreach ($cart->getItems() as $item) {
+                $itemsTotal += $item->getPrice() * $item->getQuantity();
+            }
+            $tax = $itemsTotal * $rate / 100;
             $tax = round($tax, 2);
         }
 

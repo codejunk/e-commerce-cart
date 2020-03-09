@@ -196,11 +196,15 @@ class CartTest extends \Codeception\Test\Unit
         );
         $cart->components()->add($taxOrig);
         $this->assertEquals($cart->getTotal(), 409.29 + 7.99 + 37.86);
+        $this->assertEquals($cart->components()->get('tax')->getValue(), 37.86);
+
 
         $cart->discount()->setCode('SOME-CODE');
 
-
         $cart->discount()->add(new DiscountItem('10-discount', '10% off all products', 10));
+        // Verify Tax with item discount
+        $this->assertEquals($cart->components()->get('tax')->getValue(), 34.07);
+
         $cart->discount()->add(new DiscountShipping('free-shipping', 'Free shipping', 100));
         $cart->discount()->add(new DiscountTax('tax-free', 'Tax free', 100));
 
@@ -208,12 +212,27 @@ class CartTest extends \Codeception\Test\Unit
         $this->assertEquals($cart->discount()->get('tax-free')->getId(), 'tax-free');
         $this->assertEquals($cart->discount()->getCode(), 'SOME-CODE');
 
+        // Test tax and shipping with discounts
+        $this->assertEquals($cart->components()->get('tax')->getValue(), 34.07);
+        $this->assertEquals($cart->components()->get('shipping')->getValue(), 7.99);
+        $this->assertEquals($cart->components()->get('tax')->getDiscount(), 34.07);
+        $this->assertEquals($cart->components()->get('shipping')->getDiscount(), 7.99);
 
         // Test items discounts
         $this->assertEquals($cart->getItem('1')->getPrice(), 89.99);
+        $this->assertEquals($cart->getItem('2')->getPrice(), 62.99);
         $this->assertEquals($cart->getItem('3')->getPrice(), 71.79);
 
+        // Verify totals
         $this->assertEquals($cart->getTotal(), 368.36);
+        $this->assertEquals($cart->getItemsTotal(), 409.29);
+        // Items discount + shipping discount + tax discount
+        $this->assertEquals($cart->getDiscountTotal(), 40.93 + 7.99 + 34.07);
+        // Items discount
+        $this->assertEquals($cart->getDiscountItems(), 40.93);
+        // Components discount
+        $this->assertEquals($cart->getDiscountComponents(), 7.99 + 34.07);
+
 
 
         $cart->discount()->clear();

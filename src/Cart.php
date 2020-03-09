@@ -68,7 +68,7 @@ class Cart implements CartInterface
     ) {
         $this->repository = $repository ?? new CartRepositorySession();
         $this->observer = $eventObserver ?? new CartEventObserver($this);
-        $this->components = $components ?? new ComponentCollection($this->observer);
+        $this->components = $components ?? new ComponentCollection($this->observer, $this);
         $this->discounts = $discounts ?? new DiscountCollection($this->observer);
     }
 
@@ -171,7 +171,7 @@ class Cart implements CartInterface
      */
     public function getDiscountTotal(): float
     {
-        return $this->getItemsDiscount() + $this->getComponentsDiscount();
+        return $this->getDiscountItems() + $this->getDiscountComponents();
     }
 
 
@@ -181,9 +181,9 @@ class Cart implements CartInterface
     public function getTotal(): float
     {
         // Calculate items total
-        $total = ($this->getItemsTotal() - $this->getItemsDiscount());
+        $total = ($this->getItemsTotal() - $this->getDiscountItems());
         // Calculate components total
-        $total += ($this->getComponentsTotal() - $this->getComponentsDiscount());
+        $total += ($this->getComponentsTotal() - $this->getDiscountComponents());
 
         return $total;
     }
@@ -223,7 +223,7 @@ class Cart implements CartInterface
     /**
      * @return float
      */
-    protected function getItemsDiscount()
+    public function getDiscountItems(): float
     {
         $discount = 0;
         foreach ($this->items as $item) {
@@ -236,16 +236,14 @@ class Cart implements CartInterface
     }
 
     /**
-     * @return float|int
+     * @return float
      */
-    protected function getComponentsDiscount()
+    public function getDiscountComponents(): float
     {
         $discount = 0;
         foreach ($this->components->getList() as $component) {
             // Apply matching discount if any
-            foreach ($this->discounts->getList($component) as $discountOption) {
-                $discount += $discountOption->getValue($component);
-            }
+            $discount += $component->getDiscount();
         }
         return $discount;
     }

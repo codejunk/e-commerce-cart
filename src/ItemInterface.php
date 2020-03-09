@@ -5,7 +5,7 @@ namespace codejunk\ecommerce\cart;
  * Interface ItemInterface
  * @package Cart
  */
-interface ItemInterface
+interface ItemInterface extends OptionInterface
 {
     /**
      * @return string
