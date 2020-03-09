@@ -111,7 +111,8 @@ require_once 'actions.php';
                         <div class="d-flex">
                             <div>Bag Total</div>
                             <div class="ml-auto font-weight-bold">
-                                $<?= $cart->getItemsTotal() ?>
+                                <del>$<?= $cart->getItemsTotal() ?></del><br/>
+                                $<?= $cart->getItemsTotal() - $cart->getDiscountItems() ?>
                             </div>
                         </div>
                         <hr class="my-1">
@@ -120,7 +121,7 @@ require_once 'actions.php';
                             <div class="d-flex">
                                 <div class="text-nowrap"><?= $component->getId() ?></div>
                                 <div class="ml-auto font-weight-bold">
-                                    $<?= $component->getValue() ?>
+                                    <del>$<?= $component->getValue() ?></del> $<?= $component->getValue() - $component->getDiscount() ?>
                                 </div>
                             </div>
                         <?php endforeach; ?>
