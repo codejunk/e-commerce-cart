@@ -131,8 +131,12 @@ class CartTest extends \Codeception\Test\Unit
     public function testClear()
     {
         $cart = $this->getCart();
+        $cart->setOption('test_option', 'VALUE');
         $cart->clear();
+
         $this->assertEmpty($cart->getItems());
+        $this->assertEmpty($cart->getOption('test_option'));
+
         $this->assertEquals($cart->getItemsCount(), 0);
         $this->assertEquals($cart->getItemsTotal(), 0);
         $this->assertEquals($cart->getTotal(), 0);

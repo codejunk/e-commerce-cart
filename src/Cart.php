@@ -147,6 +147,7 @@ class Cart implements CartInterface
     public function clear(): void
     {
         $this->items = [];
+        $this->options = [];
         $this->components->clear();
         $this->discounts->clear();
 
